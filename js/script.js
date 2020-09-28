@@ -104,7 +104,7 @@ window.addEventListener('DOMContentLoaded', function() {
         modal.classList.toggle('show');
     };
 
-    const modalTimer = setTimeout(toggleModal, 6000);
+    // const modalTimer = setTimeout(toggleModal, 6000);
     
     triggerModal.forEach(item => {
         item.addEventListener('click', () => {
@@ -138,4 +138,74 @@ window.addEventListener('DOMContentLoaded', function() {
     };
 
     window.addEventListener('scroll', removeModal);
+
+    // Menu
+
+    class MenuItem {
+        constructor(imgSrc, imgAlt, menuTitle, menuDesc, menuPrice, menuParent, ...classes) {
+            this.imgSrc = imgSrc;
+            this.imgAlt = imgAlt;
+            this.menuTitle = menuTitle;
+            this.menuDesc = menuDesc;
+            this.menuPrice = menuPrice;
+            this.menuParent = menuParent;
+            this.classes = classes;
+            this.transfer = 27;
+            this.transferPrice();
+        }
+
+        transferPrice() {
+            this.menuPrice = this.menuPrice * this.transfer;
+        }
+
+        createMenuItem() {
+            const element = document.createElement('div');
+            if (this.classes.length === 0) {
+                this.el = 'menu__item';
+                element.classList.add(this.el);
+            } else {
+                this.classes.forEach(item => element.classList.add(item));
+            }
+            element.innerHTML = `
+                <img src=${this.imgSrc} alt=${this.imgAlt}>
+                <h3 class="menu__item-subtitle">${this.menuTitle}</h3>
+                <div class="menu__item-descr">${this.menuDesc}</div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Цена:</div>
+                    <div class="menu__item-total"><span>${this.menuPrice}</span> грн/день</div>
+                </div>
+            `;
+            document.querySelector(`${this.menuParent}`).append(element);
+        }
+    }
+
+    new MenuItem(
+        "img/tabs/vegy.jpg",
+        "vegy",
+        'Меню "Фитнес"',
+        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+        9,
+        '.menu .menu__field .container'
+    ).createMenuItem();
+
+    new MenuItem(
+        "img/tabs/elite.jpg",
+        "elite",
+        'Меню "Премиум"',
+        'В меню "Премиум" мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+        21,
+        '.menu .menu__field .container'
+    ).createMenuItem();
+
+    new MenuItem(
+        "img/tabs/post.jpg",
+        "post",
+        'Меню "Постное"',
+        'Меню "Постное" - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков',
+        16,
+        '.menu .menu__field .container'
+    ).createMenuItem();
+
+
 });
