@@ -207,5 +207,54 @@ window.addEventListener('DOMContentLoaded', function() {
         '.menu .menu__field .container'
     ).createMenuItem();
 
+    // Form
 
+    const forms = document.querySelectorAll('form');
+    const messageForm = {
+        loading: "Отправка данных...",
+        success: "Данные отправлены. Мы вскоре свяжемся с Вами",
+        failure: "Возникла ошибка. Пожалуйста, попробуйте ещё раз"
+    };
+
+    function postForm(form) {
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+
+            const statusMessage = document.createElement('div');
+            statusMessage.textContent = messageForm.loading;
+            form.append(statusMessage);
+
+            const request = new XMLHttpRequest();
+
+            request.open('POST', 'server.php');
+            request.setRequestHeader('Content-type', 'application/json');
+
+            const formData = new FormData(form);
+            const obj = {};
+
+            formData.forEach((item, i) => {
+                obj[i] = item;
+            });
+
+            request.send(JSON.stringify(obj));
+            request.addEventListener('load', () => {
+                if(request.status === 200) {
+                    console.log(request.response);
+                    statusMessage.textContent = messageForm.success;
+                    form.reset();
+                    setTimeout(() => {
+                        statusMessage.remove();
+                        }, 2000
+                    );
+                } else {
+                    statusMessage.textContent = messageForm.failure;
+                }
+            })
+        })
+    }
+
+    forms.forEach(item => {
+        postForm(item);
+    })
+    
 });
