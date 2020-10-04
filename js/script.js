@@ -235,29 +235,51 @@ window.addEventListener('DOMContentLoaded', function() {
             statusMessage.classList.add('spinner');
             form.insertAdjacentElement('afterend', statusMessage);
 
-            const request = new XMLHttpRequest();
-
-            request.open('POST', 'server1.php');
-            request.setRequestHeader('Content-type', 'application/json');
-
             const formData = new FormData(form);
-            const obj = {};
 
+            const obj = {};
             formData.forEach((item, i) => {
                 obj[i] = item;
             });
 
-            request.send(JSON.stringify(obj));
-            request.addEventListener('load', () => {
-                if(request.status === 200) {
-                    console.log(request.response);
-                    showThanksModal(messageForm.success);
-                    form.reset();
-                    statusMessage.remove();
-                } else {
-                    showThanksModal(messageForm.failure);
-                    statusMessage.remove();
-                }
+            // отправка запроса через AJAX
+            // 
+            // const request = new XMLHttpRequest();
+            // request.open('POST', 'server.php');
+            // request.setRequestHeader('Content-type', 'application/json');
+            // request.send(JSON.stringify(obj));
+            // request.addEventListener('load', () => {
+            //     if(request.status === 200) {
+            //         console.log(request.response);
+            //         showThanksModal(messageForm.success);
+            //         form.reset();
+            //         statusMessage.remove();
+            //     } else {
+            //         showThanksModal(messageForm.failure);
+            //         statusMessage.remove();
+            //     }
+            // })
+
+            // Отправка запроса на сервер через fetch()
+
+            fetch('server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            }).then(data => data.text())
+            .then(data => {
+                console.log(data);
+                showThanksModal(messageForm.success);
+                statusMessage.remove();
+            })
+            .catch(() => {
+                showThanksModal(messageForm.failure);
+                statusMessage.remove();
+            })
+            .finally(() => {
+                form.reset();
             })
         })
     }
@@ -282,7 +304,7 @@ window.addEventListener('DOMContentLoaded', function() {
             thanksModal.remove();
             prevModal.classList.remove('hide');
             closeModal();
-        }, 2000);
+        }, 3000);
     }
 
     forms.forEach(item => {
