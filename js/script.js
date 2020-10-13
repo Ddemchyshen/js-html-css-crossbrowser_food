@@ -344,4 +344,127 @@ window.addEventListener('DOMContentLoaded', function() {
     .then(data => data.json())
     .then(res => console.log(res));
 
+    // Slider
+
+    const sliderImg = document.querySelectorAll('.offer__slide'),
+        currentSlide = document.querySelector('#current'),
+        totalSlides = document.querySelector('#total'),
+        sliderPrev = document.querySelector('.offer__slider-prev'),
+        sliderNext = document.querySelector('.offer__slider-next'),
+        sliderWrapper = document.querySelector('.offer__slider-wrapper'),
+        sliderInner = document.querySelector('.offer__slider-inner'),
+        width = window.getComputedStyle(sliderWrapper).width;
+
+    let slideIndex = 1,
+        offset = 0;
+
+    // Вариант слайдера с анимацией
+
+    sliderInner.style.width = 100 * sliderImg.length + '%';
+    sliderInner.style.display = 'flex';
+    sliderInner.style.transition = '0.5s all';
+
+    sliderWrapper.style.overflow = 'hidden';
+
+    sliderImg.forEach(item => item.style.width = width);
+
+    if(sliderImg.length > 10) { // проверка вывода общего количества слайдов
+        totalSlides.textContent = sliderImg.length;
+        currentSlide.textContent = slideIndex;
+    } else  {
+        totalSlides.textContent = `0${sliderImg.length}`;
+        currentSlide.textContent = `0${slideIndex}`;
+    }
+
+
+    sliderPrev.addEventListener('click', () => {
+        if(offset == 0) {
+            offset = +width.slice(0, width.length - 2) * (sliderImg.length - 1)
+        } else {
+            offset -= +width.slice(0, width.length - 2);
+        }
+
+        if(slideIndex == 1) {
+            slideIndex = sliderImg.length;
+        } else {
+            slideIndex--;
+        }
+
+        if(slideIndex < 10) {
+            currentSlide.textContent = `0${slideIndex}`;
+        } else {
+            currentSlide.textContent = slideIndex;
+        }
+
+        sliderInner.style.transform = `translateX(-${offset}px)`;
+    });
+
+    sliderNext.addEventListener('click', () => {
+        if(offset == +width.slice(0, width.length - 2) * (sliderImg.length - 1)) {
+            offset = 0;
+        } else {
+            offset += +width.slice(0, width.length - 2);
+        }
+
+        if(slideIndex == sliderImg.length) {
+            slideIndex = 1;
+        } else {
+            slideIndex++;
+        }
+
+        if(slideIndex < 10) {
+            currentSlide.textContent = `0${slideIndex}`;
+        } else {
+            currentSlide.textContent = slideIndex;
+        }
+
+        sliderInner.style.transform = `translateX(-${offset}px)`;
+    });
+
+    // Вариант слайдера без анимации
+    // if(sliderImg.length > 10) { // проверка вывода общего количества слайдов
+    //     totalSlides.textContent = sliderImg.length;
+    // } else  {
+    //     totalSlides.textContent = `0${sliderImg.length}`;
+    // }
+
+    // function showSlide(slideIndex) {     // функция вывода нужного слайда и скрытия остальных
+    //     sliderImg.forEach(item => {
+    //         item.classList.remove('show');
+    //         item.classList.add('hide');
+    //     });
+    //     sliderImg[slideIndex - 1].classList.add('show');
+
+    //     if(slideIndex > 10) { // проверка вывода номера текущего слайда
+    //         currentSlide.textContent = slideIndex;
+    //     } else  {
+    //         currentSlide.textContent = `0${slideIndex}`;
+    //     }    
+    // }
+
+    // showSlide(slideIndex);
+
+    // function slideChanger(n) {   // функция изменения номера индекса показываемого слайда, с проверками на максимальное и минимальное значения 
+    //     slideIndex += n;
+
+    //     if (slideIndex < 1) {
+    //         slideIndex = sliderImg.length;
+    //     }
+    //     if(slideIndex > sliderImg.length) {
+    //         slideIndex = 1;
+    //     }
+
+    //     showSlide(slideIndex);
+    // }
+
+    // sliderPrev.addEventListener('click', () => {
+    //     slideChanger(-1);
+    // })
+
+    // sliderNext.addEventListener('click', () => {
+    //     slideChanger(1);
+    // })
+
 });
+
+
