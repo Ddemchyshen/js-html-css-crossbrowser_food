@@ -347,26 +347,27 @@ window.addEventListener('DOMContentLoaded', function() {
     // Slider
 
     const sliderImg = document.querySelectorAll('.offer__slide'),
-        currentSlide = document.querySelector('#current'),
-        totalSlides = document.querySelector('#total'),
-        sliderPrev = document.querySelector('.offer__slider-prev'),
-        sliderNext = document.querySelector('.offer__slider-next'),
-        sliderWrapper = document.querySelector('.offer__slider-wrapper'),
-        sliderInner = document.querySelector('.offer__slider-inner'),
-        width = window.getComputedStyle(sliderWrapper).width;
+          slider = document.querySelector('.offer__slider'),
+          currentSlide = document.querySelector('#current'),
+          totalSlides = document.querySelector('#total'),
+          sliderPrev = document.querySelector('.offer__slider-prev'),
+          sliderNext = document.querySelector('.offer__slider-next'),
+          sliderWrapper = document.querySelector('.offer__slider-wrapper'),
+          sliderInner = document.querySelector('.offer__slider-inner'),
+          width = window.getComputedStyle(sliderWrapper).width;
 
     let slideIndex = 1,
         offset = 0;
 
     // Вариант слайдера с анимацией
 
-    sliderInner.style.width = 100 * sliderImg.length + '%';
+    sliderInner.style.width = 100 * sliderImg.length + '%'; // размер блока равен 100% умноженных на количество элементов в массиве
     sliderInner.style.display = 'flex';
     sliderInner.style.transition = '0.5s all';
 
-    sliderWrapper.style.overflow = 'hidden';
+    sliderWrapper.style.overflow = 'hidden'; // всё выходящее за размеры блока будет скрыто
 
-    sliderImg.forEach(item => item.style.width = width);
+    sliderImg.forEach(item => item.style.width = width); // каждый элемент массива будет иметь 100% от расчитанной ширины блока в браузере
 
     if(sliderImg.length > 10) { // проверка вывода общего количества слайдов
         totalSlides.textContent = sliderImg.length;
@@ -376,6 +377,52 @@ window.addEventListener('DOMContentLoaded', function() {
         currentSlide.textContent = `0${slideIndex}`;
     }
 
+    slider.style.position = 'relative';
+
+    const dotField = document.createElement('ol'), //создаем, стилизуем и размещаем поле в разметке, где будут размещены индикаторы слайдера
+          dots = []; 
+    
+    dotField.style.cssText = `
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 15;
+        display: flex;
+        justify-content: center;
+        margin-right: 15%;
+        margin-left: 15%;
+        list-style: none;
+    `;
+    slider.append(dotField);
+
+    for(let i = 0; i < sliderImg.length; i++) {
+        const dot = document.createElement('li'); //создаем, стилизуем и размещаем точки слайдера
+  
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.style.cssText = `
+            box-sizing: content-box;
+            flex: 0 1 auto;
+            width: 30px;
+            height: 6px;
+            margin-right: 3px;
+            margin-left: 3px;
+            background-color: #fff;
+            background-clip: padding-box;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            opacity: .5;
+            transition: opacity .6s ease;
+            cursor: pointer;
+        `;
+        dotField.append(dot);
+        dots.push(dot);
+
+        if(i == 0) {
+            dot.style.opacity = '1';
+    }
+
+    };
 
     sliderPrev.addEventListener('click', () => {
         if(offset == 0) {
@@ -397,6 +444,9 @@ window.addEventListener('DOMContentLoaded', function() {
         }
 
         sliderInner.style.transform = `translateX(-${offset}px)`;
+
+        dots.forEach(item => item.style.opacity = '0.5'); // изменяем активную точку слайдера
+        dots[slideIndex - 1].style.opacity = '1';
     });
 
     sliderNext.addEventListener('click', () => {
@@ -419,7 +469,31 @@ window.addEventListener('DOMContentLoaded', function() {
         }
 
         sliderInner.style.transform = `translateX(-${offset}px)`;
+
+        dots.forEach(item => item.style.opacity = '0.5'); // изменяем активную точку слайдера
+        dots[slideIndex - 1].style.opacity = '1';
     });
+
+    dots.forEach(dot => {
+        dot.addEventListener('click', (e) => { // переключение слайдов при нажатии на точку слайдера
+            const slideTo = e.target.getAttribute('data-slide-to');
+
+            slideIndex = slideTo;
+            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+
+            sliderInner.style.transform = `translateX(-${offset}px)`;
+
+            dots.forEach(item => item.style.opacity = '0.5'); // изменяем активную точку слайдера
+            dots[slideIndex - 1].style.opacity = '1';
+
+            if(slideIndex < 10) {
+                currentSlide.textContent = `0${slideIndex}`;
+            } else {
+                currentSlide.textContent = slideIndex;
+            }
+    
+        })
+    })
 
     // Вариант слайдера без анимации
     // if(sliderImg.length > 10) { // проверка вывода общего количества слайдов
