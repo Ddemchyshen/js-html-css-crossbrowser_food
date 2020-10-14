@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 	tabsParent.addEventListener('click', function(event) {
 		const target = event.target;
-		if(target && target.classList.contains('tabheader__item')) {
+		if (target && target.classList.contains('tabheader__item')) {
             tabs.forEach((item, i) => {
                 if (target == item) {
                     hideTabContent();
@@ -185,7 +185,7 @@ window.addEventListener('DOMContentLoaded', function() {
     const getMenuItem = async url => {
         const result = await fetch(url)
 
-        if(!result.ok) {
+        if (!result.ok) {
             throw new Error(`Не полкчилось обработать ${url}, статус ошибки ${result.status}`)
         }
 
@@ -361,6 +361,22 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // Вариант слайдера с анимацией
 
+    function createDigit(string) {
+        return +string.replace(/\D/g, '');
+    }
+
+    function currentSlideChecker() {    //проверка номера активного слайда и опциональное добавление "0" при отрисовке
+        if(slideIndex < 10) {
+            currentSlide.textContent = `0${slideIndex}`;
+        } else {
+            currentSlide.textContent = slideIndex;
+        }
+    }
+
+    function sliderTransform() {    //смещение слайдера на размер offset
+        sliderInner.style.transform = `translateX(-${offset}px)`;
+    }
+
     sliderInner.style.width = 100 * sliderImg.length + '%'; // размер блока равен 100% умноженных на количество элементов в массиве
     sliderInner.style.display = 'flex';
     sliderInner.style.transition = '0.5s all';
@@ -394,6 +410,7 @@ window.addEventListener('DOMContentLoaded', function() {
         margin-left: 15%;
         list-style: none;
     `;
+
     slider.append(dotField);
 
     for(let i = 0; i < sliderImg.length; i++) {
@@ -415,20 +432,21 @@ window.addEventListener('DOMContentLoaded', function() {
             transition: opacity .6s ease;
             cursor: pointer;
         `;
+
         dotField.append(dot);
         dots.push(dot);
 
-        if(i == 0) {
+        if (i == 0) {
             dot.style.opacity = '1';
-    }
+        }
 
     };
 
     sliderPrev.addEventListener('click', () => {
         if(offset == 0) {
-            offset = +width.slice(0, width.length - 2) * (sliderImg.length - 1)
+            offset = createDigit(width) * (sliderImg.length - 1)
         } else {
-            offset -= +width.slice(0, width.length - 2);
+            offset -= createDigit(width);
         }
 
         if(slideIndex == 1) {
@@ -437,23 +455,18 @@ window.addEventListener('DOMContentLoaded', function() {
             slideIndex--;
         }
 
-        if(slideIndex < 10) {
-            currentSlide.textContent = `0${slideIndex}`;
-        } else {
-            currentSlide.textContent = slideIndex;
-        }
-
-        sliderInner.style.transform = `translateX(-${offset}px)`;
+        currentSlideChecker();
+        sliderTransform();
 
         dots.forEach(item => item.style.opacity = '0.5'); // изменяем активную точку слайдера
         dots[slideIndex - 1].style.opacity = '1';
     });
 
     sliderNext.addEventListener('click', () => {
-        if(offset == +width.slice(0, width.length - 2) * (sliderImg.length - 1)) {
+        if(offset == createDigit(width) * (sliderImg.length - 1)) {
             offset = 0;
         } else {
-            offset += +width.slice(0, width.length - 2);
+            offset += createDigit(width);
         }
 
         if(slideIndex == sliderImg.length) {
@@ -462,13 +475,8 @@ window.addEventListener('DOMContentLoaded', function() {
             slideIndex++;
         }
 
-        if(slideIndex < 10) {
-            currentSlide.textContent = `0${slideIndex}`;
-        } else {
-            currentSlide.textContent = slideIndex;
-        }
-
-        sliderInner.style.transform = `translateX(-${offset}px)`;
+        currentSlideChecker();
+        sliderTransform();
 
         dots.forEach(item => item.style.opacity = '0.5'); // изменяем активную точку слайдера
         dots[slideIndex - 1].style.opacity = '1';
@@ -479,19 +487,15 @@ window.addEventListener('DOMContentLoaded', function() {
             const slideTo = e.target.getAttribute('data-slide-to');
 
             slideIndex = slideTo;
-            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+            offset = createDigit(width) * (slideTo - 1);
 
-            sliderInner.style.transform = `translateX(-${offset}px)`;
+            sliderTransform();
 
             dots.forEach(item => item.style.opacity = '0.5'); // изменяем активную точку слайдера
             dots[slideIndex - 1].style.opacity = '1';
 
-            if(slideIndex < 10) {
-                currentSlide.textContent = `0${slideIndex}`;
-            } else {
-                currentSlide.textContent = slideIndex;
-            }
-    
+            currentSlideChecker();
+
         })
     })
 
@@ -540,5 +544,3 @@ window.addEventListener('DOMContentLoaded', function() {
     // })
 
 });
-
-
