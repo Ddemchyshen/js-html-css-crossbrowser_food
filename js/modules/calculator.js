@@ -1,5 +1,4 @@
 const calculator = function() {
-    // Calculator
     const resultCalc = document.querySelector('.calculating__result span');
     let gender, ratio, height, weight, age;
 

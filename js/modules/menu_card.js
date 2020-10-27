@@ -1,6 +1,6 @@
-const menuCard = function() {
-    // Menu Card
+import {getMenuItem} from '../services/services';
 
+const menuCard = function() {
     class MenuItem {
         constructor(img, altimg, title, descr, price, menuParent, ...classes) {
             this.img = img;
@@ -38,16 +38,6 @@ const menuCard = function() {
             `;
             document.querySelector(`${this.menuParent}`).append(element);
         }
-    }
-
-    const getMenuItem = async url => {
-        const result = await fetch(url)
-
-        if (!result.ok) {
-            throw new Error(`Не полкчилось обработать ${url}, статус ошибки ${result.status}`)
-        }
-
-        return await result.json();
     }
 
     // создание карточек меню через запрос json-server к файлу db.json и с использованием класса MenuItem

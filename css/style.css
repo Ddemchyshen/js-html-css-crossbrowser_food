@@ -320,7 +320,11 @@ a {
 
 .offer__slider-prev {
     margin-right: 10px;
-    cursor: pointer
+    cursor: pointer;
+}
+
+.offer__slider-prev img {
+    width: 20px;
 }
 
 .offer__slider-next {
@@ -328,6 +332,9 @@ a {
     cursor: pointer
 }
 
+.offer__slider-next img {
+    width: 20px;
+}
 .offer__slider #current {
     font-size: 48px;
     font-weight: 700;
@@ -535,7 +542,8 @@ a {
 }
 
 .order__form img {
-    transform: scale(1.5)
+    transform: scale(1.5);
+    width: 20px;
 }
 
 .order__input {
@@ -622,7 +630,7 @@ a {
 .footer {
     min-height: 180px;
     background-color: #303030;
-    padding: 45px 0 50px 0;
+    padding: 25px 0 30px 0;
     color: #fff
 }
 
@@ -630,11 +638,36 @@ a {
     height: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: flex-end
+    align-items: flex-start;
+}
+
+.footer .container:only-child {
+    width: 33.33%;
+}
+
+.footer .myname {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.footer .social {
+    width: 33.33%;
+}
+
+.footer .pepper {
+    align-self: center;
+    width: 33.33%;
+    margin: auto;
+}
+
+.footer .pepper img {
+    display: block;
+    margin: 0 auto;
 }
 
 .footer .subtitle {
-    font-size: 20px
+    font-size: 22px
 }
 
 .footer .link {
@@ -646,6 +679,7 @@ a {
 
 .footer .call {
     text-align: right
+    width: 33.33%;
 }
 
 .modal {

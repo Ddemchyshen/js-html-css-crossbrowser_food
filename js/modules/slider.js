@@ -1,20 +1,18 @@
-const slider = function() {
-    // Slider
-
-    const sliderImg = document.querySelectorAll('.offer__slide'),
-    slider = document.querySelector('.offer__slider'),
-    currentSlide = document.querySelector('#current'),
-    totalSlides = document.querySelector('#total'),
-    sliderPrev = document.querySelector('.offer__slider-prev'),
-    sliderNext = document.querySelector('.offer__slider-next'),
-    sliderWrapper = document.querySelector('.offer__slider-wrapper'),
-    sliderInner = document.querySelector('.offer__slider-inner'),
-    width = window.getComputedStyle(sliderWrapper).width;
+const slider = function({container, slide, current, total, next, prev, wrapper, inner}) {
+    const sliderImg = document.querySelectorAll(slide),
+          slider = document.querySelector(container),
+          currentSlide = document.querySelector(current),
+          totalSlides = document.querySelector(total),
+          sliderPrev = document.querySelector(prev),
+          sliderNext = document.querySelector(next),
+          sliderWrapper = document.querySelector(wrapper),
+          sliderInner = document.querySelector(inner),
+          width = window.getComputedStyle(sliderWrapper).width;
 
     let slideIndex = 1,
         offset = 0;
 
-  // Вариант слайдера с анимацией
+  // Вариант слайдера с анимацией 
 
     function createDigit(string) {
       return +string.replace(/\D/g, '');

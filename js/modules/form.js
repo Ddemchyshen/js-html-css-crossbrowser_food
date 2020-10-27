@@ -1,6 +1,7 @@
-const form = function() {
-    // Form
+import {showModal, closeModal} from './modal';
+import {postData} from '../services/services';
 
+const form = function(modalTimer) {
     const forms = document.querySelectorAll('form');
     const messageForm = {
         loading: "img/form/spinner.svg",
@@ -8,24 +9,12 @@ const form = function() {
         failure: "Возникла ошибка. Пожалуйста, попробуйте ещё раз"
     };
 
-    // Работа с сервером с помощью fetch()
-    const postData = async (url, data) => {
-        const result = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: data
-        })
-
-        return await result.json();
-    }
-
     function bindPostForm(form) {
         form.addEventListener('submit', e => {
             e.preventDefault();
 
             const statusMessage = document.createElement('img');
+            
             statusMessage.src = messageForm.loading;
             statusMessage.classList.add('spinner');
             form.insertAdjacentElement('afterend', statusMessage);
@@ -38,8 +27,7 @@ const form = function() {
             //     obj[i] = item;
             // });
 
-            // создание json объекта с помощью методов .entries() .fromEntries()
-            const json = JSON.stringify(Object.fromEntries(formData.entries()));
+            const json = JSON.stringify(Object.fromEntries(formData.entries())); // создание json объекта с помощью методов .entries() .fromEntries()
 
             // Работа с сервером с помощью AJAX
             // const request = new XMLHttpRequest();
@@ -77,7 +65,7 @@ const form = function() {
     function showThanksModal(message) {
         const prevModal = document.querySelector('.modal__dialog');
         prevModal.classList.add('hide');
-        showModal();
+        showModal('.modal', modalTimer);
 
         const thanksModal = document.createElement('div');
 
@@ -93,7 +81,7 @@ const form = function() {
         setTimeout(() => {
             thanksModal.remove();
             prevModal.classList.remove('hide');
-            closeModal();
+            closeModal('.modal');
         }, 3000);
     }
 
@@ -102,9 +90,8 @@ const form = function() {
     })
     
     fetch('http://localhost:3000/menu')
-    .then(data => data.json())
-    .then(res => console.log(res));
-
+    .then(data => data.json());
+    // .then(res => console.log(res));
 }
 
 export default form;
